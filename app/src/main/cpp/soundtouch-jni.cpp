@@ -254,6 +254,32 @@ Java_net_surina_soundtouch_SoundTouch_processFile(JNIEnv *env, jobject thiz, jlo
     return 0;
 }
 
-extern "C" JNIEXPORT int JNICALL Java_com_zcc_nativecode_demo_MainActivity_processFile(JNIEnv *env, jobject thiz, jstring input, jstring output) {
+extern "C" JNIEXPORT int JNICALL
+Java_com_zcc_nativecode_demo_MainActivity_processFile(JNIEnv *env, jobject thiz, jstring input,
+                                                      jstring output) {
+    SoundTouch *ptr = new SoundTouch();
+
+    const char *inputFile = env->GetStringUTFChars(input, 0);
+    const char *outputFile = env->GetStringUTFChars(output, 0);
+
+    LOGV("JNI process file %s", inputFile);
+
+    /// gomp_tls storage bug workaround - see comments in _init_threading() function!
+    if (_init_threading(true)) return -1;
+
+    try {
+        _processFile(ptr, inputFile, outputFile);
+    }
+    catch (const runtime_error &e) {
+        const char *err = e.what();
+        // An exception occurred during processing, return the error message
+        LOGV("JNI exception in SoundTouch::processFile: %s", err);
+        _setErrmsg(err);
+        return -1;
+    }
+
+
+    env->ReleaseStringUTFChars(input, inputFile);
+    env->ReleaseStringUTFChars(output, outputFile);
     return 0;
 }
