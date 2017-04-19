@@ -258,7 +258,7 @@ extern "C" JNIEXPORT int JNICALL
 Java_com_zcc_nativecode_demo_MainActivity_processFile(JNIEnv *env, jobject thiz, jstring input,
                                                       jstring output) {
     SoundTouch *ptr = new SoundTouch();
-
+    ptr->setRate(1.314);
     const char *inputFile = env->GetStringUTFChars(input, 0);
     const char *outputFile = env->GetStringUTFChars(output, 0);
 

@@ -1,16 +1,18 @@
 package com.zcc.nativecode.demo;
 
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import java.io.File;
+import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String SOURCE_FILE = "/sdcard/DxSoundRecorder/Recorder/11.mp3";
+    private static final String SOURCE_FILE = "/storage/emulated/0/RecForge/11.wav";
 
     // Used to load the 'native-lib' library on application startup.
     static {
@@ -21,8 +23,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        final String DESTINATION = getExternalCacheDir() + "result.mp3";
+        final String DESTINATION = Environment.getExternalStorageDirectory() + "/result.wav";
         // Example of a call to a native method
+        Log.i("zcc", DESTINATION);
         TextView tv = (TextView) findViewById(R.id.sample_text);
         tv.setText(stringFromJNI());
         File f = new File(SOURCE_FILE);
